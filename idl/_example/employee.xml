@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<idl>
+    <interface name="Employee" clsid="65d6ec66-ef74-4a08-ab45-515845cf3f03">
+        <method name="GetName" return="string" />
+        <method name="SetName" access="private">
+            <param name="name" type="string" />
+        </method>
+
+        <method name="GetSalary" return="float" />
+        <method name="SetSalary" access="private">
+            <param name="salary" type="float" />
+        </method>
+
+        <method name="GetTenure" return="int" />
+        <method name="SetTenure" access="private">
+            <param name="tenure" type="int" />
+        </method>
+
+        <method name="IsMarried" return="bool" />
+        <method name="SetMarried" access="private">
+            <param name="married" type="bool" />
+        </method>
+    </interface>
+</idl>

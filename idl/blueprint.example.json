@@ -1,0 +1,19 @@
+{
+    "inventoryDir": "_inventory",
+    "generatedDir": "_generated",
+    "componentPackage": {
+        "path": "github.com/michaelrk02/dcom/example/component",
+        "alias": "component",
+        "suffix": "_c"
+    },
+    "proxyPackage": {
+        "path": "github.com/michaelrk02/dcom/example/client/proxy",
+        "alias": "proxy",
+        "suffix": "_p"
+    },
+    "stubPackage": {
+        "path": "github.com/michaelrk02/dcom/example/server/stub",
+        "alias": "stub",
+        "suffix": "_s"
+    }
+}

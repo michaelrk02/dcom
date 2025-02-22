@@ -1,0 +1,7 @@
+idl/_generated/**
+!idl/_generated/.gitkeep
+
+idl/_inventory/**
+!idl/_inventory/.gitkeep
+
+idl/blueprint.json

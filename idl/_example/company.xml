@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<idl>
+    <structure name="Contact">
+        <property name="email" type="string" />
+        <property name="telephone" type="string" />
+    </structure>
+
+    <structure name="Metadata">
+        <property name="name" type="string" />
+        <property name="address" type="string" />
+        <property name="website" type="string" />
+        <property name="contact" type="#Contact" />
+    </structure>
+
+    <interface name="Company" clsid="e1192b79-c05b-4ec5-bae4-cb6acdd9f9a0">
+        <method name="GetName" return="string" />
+        <method name="SetName" access="private">
+            <param name="name" type="string" />
+        </method>
+
+        <method name="GetMetadata" return="#Metadata" />
+        <method name="SetMetadata" access="private">
+            <param name="metadata" type="#Metadata" />
+        </method>
+
+        <method name="GetEmployees" return="@Employee[]">
+            <param name="keyword" type="string" />
+            <param name="limit" type="int?" />
+        </method>
+        <method name="AddEmployee" access="private">
+            <param name="employee" type="@Employee" />
+        </method>
+        <method name="AddEmployees" access="private">
+            <param name="employee" type="@Employee[]" />
+        </method>
+        <method name="RemoveEmployee" access="private">
+            <param name="employee" type="@Employee" />
+        </method>
+    </interface>
+</idl>
