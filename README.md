@@ -17,6 +17,10 @@ You can take a look at the [example](./example) on how the generated code and im
 
 ![DCOM Architecture](./dcom-architecture.png)
 
+### Object Life Cycle
+
+Every instance has its own **reference count** that tracks how many ownerships over that particular object. A potential owner (either local or remote) may call `Acquire` method in order to obtain ownership over an object hence incrementing the number of references on that object. After finished using its resources, the owner should call `Release` to give away its ownership over that object hence decrementing the reference count. When an object's reference count reaches zero, it will automatically **destroy** itself, hence remotely inaccessible. Initial object creations set the reference count number to one so that the creator is also responsible for releasing the objects it has created.
+
 ## Interface Definition Language
 
 The Interface Definition Language (IDL) uses XML format with this structure:

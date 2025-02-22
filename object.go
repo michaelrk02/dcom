@@ -7,4 +7,7 @@ import (
 type Object interface {
 	GetCLSID() uuid.UUID
 	GetInstanceID() uuid.UUID
+	Acquire()
+	Release()
+	Dispose()
 }

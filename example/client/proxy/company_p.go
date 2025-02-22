@@ -15,7 +15,9 @@ type Company struct {
 }
 
 func NewCompany(instanceID uuid.UUID, conn *dcom.ProxyConnection, f dcom.Factory) dcom.Object {
-	return &Company{ObjectProxy: dcom.NewObjectProxy(instanceID, conn, f)}
+	proxy := &Company{ObjectProxy: dcom.NewObjectProxy(instanceID, conn, f)}
+	proxy.Object = proxy
+	return proxy
 }
 
 func (proxy_ *Company) GetCLSID() uuid.UUID {

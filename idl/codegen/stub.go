@@ -30,7 +30,7 @@ func (gen *StubGenerator) Generate(f *jen.File, bp *Blueprint) {
 		Params(jen.Qual(DCOMPackage, "Stub")).
 		BlockFunc(func(g *jen.Group) {
 			g.Id("stub").Op(":=").Op("&").Id(gen.Interface.Name).Values(jen.Dict{
-				jen.Id("ObjectStub"): jen.Qual(DCOMPackage, "NewObjectStub").Call(jen.Id("f")),
+				jen.Id("ObjectStub"): jen.Qual(DCOMPackage, "NewObjectStub").Call(jen.Id("f"), jen.Id("obj")),
 				jen.Id("obj"):        jen.Id("obj").Op(".").Parens(jen.Qual(bp.ComponentPackage.Path, gen.Interface.Name)),
 			}).Line()
 

@@ -29,11 +29,13 @@ func (gen *ProxyGenerator) Generate(f *jen.File, bp *Blueprint) {
 		).
 		Params(jen.Qual(DCOMPackage, "Object")).
 		BlockFunc(func(g *jen.Group) {
-			g.Return(jen.Id("&").Id(gen.Interface.Name).Values(
+			g.Id("proxy").Op(":=").Id("&").Id(gen.Interface.Name).Values(
 				jen.Dict{
 					jen.Id("ObjectProxy"): jen.Qual(DCOMPackage, "NewObjectProxy").Call(jen.Id("instanceID"), jen.Id("conn"), jen.Id("f")),
 				},
-			))
+			)
+			g.Id("proxy").Op(".").Id("Object").Op("=").Id("proxy")
+			g.Return(jen.Id("proxy"))
 		}).
 		Line()
 

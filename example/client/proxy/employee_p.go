@@ -15,7 +15,9 @@ type Employee struct {
 }
 
 func NewEmployee(instanceID uuid.UUID, conn *dcom.ProxyConnection, f dcom.Factory) dcom.Object {
-	return &Employee{ObjectProxy: dcom.NewObjectProxy(instanceID, conn, f)}
+	proxy := &Employee{ObjectProxy: dcom.NewObjectProxy(instanceID, conn, f)}
+	proxy.Object = proxy
+	return proxy
 }
 
 func (proxy_ *Employee) GetCLSID() uuid.UUID {

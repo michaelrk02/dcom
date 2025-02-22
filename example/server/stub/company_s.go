@@ -15,7 +15,7 @@ type Company struct {
 
 func NewCompany(f dcom.Factory, obj dcom.Object) dcom.Stub {
 	stub := &Company{
-		ObjectStub: dcom.NewObjectStub(f),
+		ObjectStub: dcom.NewObjectStub(f, obj),
 		obj:        obj.(component.Company),
 	}
 

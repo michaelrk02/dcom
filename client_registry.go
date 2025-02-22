@@ -41,3 +41,7 @@ func (r *ClientRegistry) CreateInstance(clsid uuid.UUID, instanceID *uuid.UUID) 
 
 	return proxy(*instanceID, r.conn, r), nil
 }
+
+func (r *ClientRegistry) Destroy(obj Object) {
+	panic("object destruction is not allowed in client context")
+}

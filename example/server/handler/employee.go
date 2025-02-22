@@ -18,14 +18,19 @@ type Employee struct {
 }
 
 func NewEmployee(f dcom.Factory, instanceID *uuid.UUID) dcom.Object {
-	return &Employee{
+	self := &Employee{
 		ObjectHandler: dcom.NewObjectHandler(f, instanceID),
 		Name:          "Unnamed Employee",
 	}
+	self.Object = self
+	return self
 }
 
 func (self *Employee) GetCLSID() uuid.UUID {
 	return component.CLSIDEmployee
+}
+
+func (self *Employee) Dispose() {
 }
 
 func (self *Employee) GetCompany() (component.Company, error) {

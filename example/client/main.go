@@ -28,6 +28,9 @@ func main() {
 	}
 	company := component.ObjectToCompany(obj)
 
+	company.Acquire()
+	defer company.Release()
+
 	running := true
 	for running {
 		var choice int
@@ -75,27 +78,33 @@ func main() {
 			}
 
 			for _, employee := range employees {
+				employee.Acquire()
+
 				name, err := employee.GetName()
 				if err != nil {
 					log.Println("error:", err)
+					employee.Release()
 					continue
 				}
 
 				salary, err := employee.GetSalary()
 				if err != nil {
 					log.Println("error:", err)
+					employee.Release()
 					continue
 				}
 
 				tenure, err := employee.GetTenure()
 				if err != nil {
 					log.Println("error:", err)
+					employee.Release()
 					continue
 				}
 
 				married, err := employee.IsMarried()
 				if err != nil {
 					log.Println("error:", err)
+					employee.Release()
 					continue
 				}
 
@@ -104,6 +113,8 @@ func main() {
 				fmt.Printf("Salary: %.2f\n", salary)
 				fmt.Printf("Tenure: %d\n", tenure)
 				fmt.Printf("Married: %t\n", married)
+
+				employee.Release()
 			}
 			fmt.Println("========================================")
 		} else {

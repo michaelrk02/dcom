@@ -2,6 +2,7 @@ package dcom
 
 import (
 	"errors"
+	"log"
 
 	"github.com/google/uuid"
 )
@@ -19,13 +20,15 @@ type ServerRegistry struct {
 	handlerMap map[uuid.UUID]HandlerEntryPoint
 	stubMap    map[uuid.UUID]StubEntryPoint
 	repo       Repository
+	l          *log.Logger
 }
 
-func NewServerRegistry(repo Repository) *ServerRegistry {
+func NewServerRegistry(repo Repository, l *log.Logger) *ServerRegistry {
 	return &ServerRegistry{
 		handlerMap: make(map[uuid.UUID]HandlerEntryPoint),
 		stubMap:    make(map[uuid.UUID]StubEntryPoint),
 		repo:       repo,
+		l:          l,
 	}
 }
 
@@ -55,7 +58,14 @@ func (r *ServerRegistry) CreateInstance(clsid uuid.UUID, instanceID *uuid.UUID) 
 	obj := handler(r, instanceID)
 	r.RegisterObject(clsid, obj.GetInstanceID(), obj)
 
+	r.l.Printf("instance created: clsid=%s id=%s", obj.GetCLSID(), obj.GetInstanceID())
+
 	return obj, nil
+}
+
+func (r *ServerRegistry) Destroy(obj Object) {
+	r.RevokeObject(obj.GetCLSID(), obj.GetInstanceID())
+	r.l.Printf("instance destroyed: clsid=%s id=%s", obj.GetCLSID(), obj.GetInstanceID())
 }
 
 func (r *ServerRegistry) CreateStub(obj Object) (Stub, error) {

@@ -19,7 +19,7 @@ func main() {
 
 	repo := dcom.NewInMemoryRepository()
 
-	reg := dcom.NewServerRegistry(repo)
+	reg := dcom.NewServerRegistry(repo, logger)
 
 	reg.AddHandler(component.CLSIDCompany, handler.NewCompany)
 	reg.AddHandler(component.CLSIDEmployee, handler.NewEmployee)
@@ -27,7 +27,8 @@ func main() {
 	reg.AddStub(component.CLSIDCompany, stub.NewCompany)
 	reg.AddStub(component.CLSIDEmployee, stub.NewEmployee)
 
-	initRegistry(reg)
+	company := initCompany(reg)
+	defer company.Release()
 
 	conn := dcom.NewStubConnection(
 		logger,
@@ -41,16 +42,16 @@ func main() {
 			panic(err)
 		}
 	}()
+	defer conn.Close()
 
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt)
 	<-ch
 
 	logger.Println("gracefully shutting down ...")
-	conn.Close()
 }
 
-func initRegistry(reg *dcom.ServerRegistry) {
+func initCompany(reg *dcom.ServerRegistry) component.Company {
 	var obj dcom.Object
 	var err error
 
@@ -90,7 +91,11 @@ func initRegistry(reg *dcom.ServerRegistry) {
 		if err != nil {
 			panic(err)
 		}
+
+		emp.Release()
 	}
+
+	return company
 }
 
 func createEmployee(

@@ -17,15 +17,23 @@ type Company struct {
 }
 
 func NewCompany(f dcom.Factory, instanceID *uuid.UUID) dcom.Object {
-	return &Company{
+	self := &Company{
 		ObjectHandler: dcom.NewObjectHandler(f, instanceID),
 		Name:          "Unnamed Company",
 		Employees:     make([]component.Employee, 0),
 	}
+	self.Object = self
+	return self
 }
 
 func (self *Company) GetCLSID() uuid.UUID {
 	return component.CLSIDCompany
+}
+
+func (self *Company) Dispose() {
+	for _, employee := range self.Employees {
+		employee.Release()
+	}
 }
 
 func (self *Company) GetName() (string, error) {
@@ -66,6 +74,7 @@ func (self *Company) GetEmployees(keyword string, limit *int) ([]component.Emplo
 }
 
 func (self *Company) AddEmployee(employee component.Employee) error {
+	employee.Acquire()
 	self.Employees = append(self.Employees, employee)
 	return nil
 }
