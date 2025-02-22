@@ -24,6 +24,60 @@ func (proxy_ *Company) GetCLSID() uuid.UUID {
 	return component.CLSIDCompany
 }
 
+func (proxy_ *Company) GetEmployees(keyword string, limit *int) ([]component.Employee, error) {
+	var err_ error
+	var params_ bytes.Buffer
+
+	in_ := dcom.NewDefaultMarshaler(&params_)
+
+	err_ = in_.WriteString(keyword)
+	if err_ != nil {
+		return nil, err_
+	}
+
+	err_ = in_.WriteIntOptional(limit)
+	if err_ != nil {
+		return nil, err_
+	}
+
+	resp_, err_ := proxy_.Conn.InvokeObject(proxy_.GetCLSID(), proxy_.GetInstanceID(), "GetEmployees", &params_)
+	if err_ != nil {
+		return nil, err_
+	}
+
+	out_ := dcom.NewDefaultUnmarshaler(resp_)
+
+	errRemote_, err_ := out_.ReadError()
+	if err_ != nil {
+		return nil, err_
+	}
+	if errRemote_ != nil {
+		return nil, errRemote_
+	}
+
+	var vRemote_ []component.Employee
+
+	vRemoteRaw_, err_ := out_.ReadObjectArray(proxy_.Factory)
+	if err_ != nil {
+		return nil, err_
+	}
+	vRemote_ = component.ObjectToEmployeeArray(vRemoteRaw_)
+
+	return vRemote_, errRemote_
+}
+
+func (proxy_ *Company) AddEmployee(employee component.Employee) error {
+	panic("method not exposed")
+}
+
+func (proxy_ *Company) AddEmployees(employee []component.Employee) error {
+	panic("method not exposed")
+}
+
+func (proxy_ *Company) RemoveEmployee(employee component.Employee) error {
+	panic("method not exposed")
+}
+
 func (proxy_ *Company) GetName() (string, error) {
 	var err_ error
 	var params_ bytes.Buffer
@@ -88,59 +142,5 @@ func (proxy_ *Company) GetMetadata() (component.Metadata, error) {
 }
 
 func (proxy_ *Company) SetMetadata(metadata component.Metadata) error {
-	panic("method not exposed")
-}
-
-func (proxy_ *Company) GetEmployees(keyword string, limit *int) ([]component.Employee, error) {
-	var err_ error
-	var params_ bytes.Buffer
-
-	in_ := dcom.NewDefaultMarshaler(&params_)
-
-	err_ = in_.WriteString(keyword)
-	if err_ != nil {
-		return nil, err_
-	}
-
-	err_ = in_.WriteIntOptional(limit)
-	if err_ != nil {
-		return nil, err_
-	}
-
-	resp_, err_ := proxy_.Conn.InvokeObject(proxy_.GetCLSID(), proxy_.GetInstanceID(), "GetEmployees", &params_)
-	if err_ != nil {
-		return nil, err_
-	}
-
-	out_ := dcom.NewDefaultUnmarshaler(resp_)
-
-	errRemote_, err_ := out_.ReadError()
-	if err_ != nil {
-		return nil, err_
-	}
-	if errRemote_ != nil {
-		return nil, errRemote_
-	}
-
-	var vRemote_ []component.Employee
-
-	vRemoteRaw_, err_ := out_.ReadObjectArray(proxy_.Factory)
-	if err_ != nil {
-		return nil, err_
-	}
-	vRemote_ = component.ObjectToEmployeeArray(vRemoteRaw_)
-
-	return vRemote_, errRemote_
-}
-
-func (proxy_ *Company) AddEmployee(employee component.Employee) error {
-	panic("method not exposed")
-}
-
-func (proxy_ *Company) AddEmployees(employee []component.Employee) error {
-	panic("method not exposed")
-}
-
-func (proxy_ *Company) RemoveEmployee(employee component.Employee) error {
 	panic("method not exposed")
 }

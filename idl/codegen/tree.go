@@ -5,8 +5,9 @@ import "encoding/xml"
 type Access string
 
 const (
-	AccessPublic  Access = "public"
-	AccessPrivate Access = "private"
+	AccessPublic   Access = "public"
+	AccessPrivate  Access = "private"
+	AccessReadonly Access = "readonly"
 )
 
 type Class int
@@ -42,6 +43,11 @@ type Tree struct {
 	Interfaces []Interface `xml:"interface"`
 }
 
+func (t *Tree) Merge(other *Tree) {
+	t.Structures = append(t.Structures, other.Structures...)
+	t.Interfaces = append(t.Interfaces, other.Interfaces...)
+}
+
 type Structure struct {
 	Name       string              `xml:"name,attr"`
 	Properties []StructureProperty `xml:"property"`
@@ -55,9 +61,16 @@ type StructureProperty struct {
 }
 
 type Interface struct {
-	Name    string            `xml:"name,attr"`
-	CLSID   string            `xml:"clsid,attr"`
-	Methods []InterfaceMethod `xml:"method"`
+	Name       string              `xml:"name,attr"`
+	CLSID      string              `xml:"clsid,attr"`
+	Properties []InterfaceProperty `xml:"property"`
+	Methods    []InterfaceMethod   `xml:"method"`
+}
+
+type InterfaceProperty struct {
+	Name   string `xml:"name,attr"`
+	Type   string `xml:"type,attr"`
+	Access Access `xml:"access,attr"`
 }
 
 type InterfaceMethod struct {

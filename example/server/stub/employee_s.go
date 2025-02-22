@@ -20,9 +20,13 @@ func NewEmployee(f dcom.Factory, obj dcom.Object) dcom.Stub {
 	}
 
 	stub.AddExecutor("GetName", stub.ExecuteGetName)
+	stub.AddExecutor("SetName", stub.ExecuteSetName)
 	stub.AddExecutor("GetSalary", stub.ExecuteGetSalary)
+	stub.AddExecutor("SetSalary", stub.ExecuteSetSalary)
 	stub.AddExecutor("GetTenure", stub.ExecuteGetTenure)
-	stub.AddExecutor("IsMarried", stub.ExecuteIsMarried)
+	stub.AddExecutor("SetTenure", stub.ExecuteSetTenure)
+	stub.AddExecutor("GetMarried", stub.ExecuteGetMarried)
+	stub.AddExecutor("SetMarried", stub.ExecuteSetMarried)
 
 	return stub
 }
@@ -34,11 +38,29 @@ func (stub_ *Employee) ExecuteGetName(in_ dcom.Unmarshaler, out_ dcom.Marshaler)
 	dcom.Assert(out_.WriteString(resp_))
 }
 
+func (stub_ *Employee) ExecuteSetName(in_ dcom.Unmarshaler, out_ dcom.Marshaler) {
+	name, err_ := in_.ReadString()
+	dcom.Assert(err_)
+
+	err_ = stub_.obj.SetName(name)
+
+	dcom.Assert(out_.WriteError(err_))
+}
+
 func (stub_ *Employee) ExecuteGetSalary(in_ dcom.Unmarshaler, out_ dcom.Marshaler) {
 	resp_, err_ := stub_.obj.GetSalary()
 
 	dcom.Assert(out_.WriteError(err_))
 	dcom.Assert(out_.WriteFloat(resp_))
+}
+
+func (stub_ *Employee) ExecuteSetSalary(in_ dcom.Unmarshaler, out_ dcom.Marshaler) {
+	salary, err_ := in_.ReadFloat()
+	dcom.Assert(err_)
+
+	err_ = stub_.obj.SetSalary(salary)
+
+	dcom.Assert(out_.WriteError(err_))
 }
 
 func (stub_ *Employee) ExecuteGetTenure(in_ dcom.Unmarshaler, out_ dcom.Marshaler) {
@@ -48,9 +70,27 @@ func (stub_ *Employee) ExecuteGetTenure(in_ dcom.Unmarshaler, out_ dcom.Marshale
 	dcom.Assert(out_.WriteInt(resp_))
 }
 
-func (stub_ *Employee) ExecuteIsMarried(in_ dcom.Unmarshaler, out_ dcom.Marshaler) {
-	resp_, err_ := stub_.obj.IsMarried()
+func (stub_ *Employee) ExecuteSetTenure(in_ dcom.Unmarshaler, out_ dcom.Marshaler) {
+	tenure, err_ := in_.ReadInt()
+	dcom.Assert(err_)
+
+	err_ = stub_.obj.SetTenure(tenure)
+
+	dcom.Assert(out_.WriteError(err_))
+}
+
+func (stub_ *Employee) ExecuteGetMarried(in_ dcom.Unmarshaler, out_ dcom.Marshaler) {
+	resp_, err_ := stub_.obj.GetMarried()
 
 	dcom.Assert(out_.WriteError(err_))
 	dcom.Assert(out_.WriteBool(resp_))
+}
+
+func (stub_ *Employee) ExecuteSetMarried(in_ dcom.Unmarshaler, out_ dcom.Marshaler) {
+	married, err_ := in_.ReadBool()
+	dcom.Assert(err_)
+
+	err_ = stub_.obj.SetMarried(married)
+
+	dcom.Assert(out_.WriteError(err_))
 }

@@ -62,15 +62,19 @@ func (bp *Blueprint) BuildTree() (*Tree, error) {
 
 				fmt.Printf("Parsing: %s ...\n", d.Name())
 
-				err = xml.NewDecoder(file).Decode(t)
+				var subtree Tree
+
+				err = xml.NewDecoder(file).Decode(&subtree)
 				if err != nil {
 					return err
 				}
 
-				err = bp.ParseIDL(t)
+				err = bp.ParseIDL(&subtree)
 				if err != nil {
 					return err
 				}
+
+				t.Merge(&subtree)
 
 				return nil
 			}()
@@ -89,25 +93,67 @@ func (bp *Blueprint) BuildTree() (*Tree, error) {
 }
 
 func (bp *Blueprint) ParseIDL(tree *Tree) error {
-	for _, st := range tree.Structures {
+	for k := range tree.Structures {
+		st := &tree.Structures[k]
+
 		for i := range st.Properties {
 			st.Properties[i].DataType = NewDataType(st.Properties[i].Type, bp.ComponentPackage)
 		}
 	}
 
-	for _, in := range tree.Interfaces {
+	for k := range tree.Interfaces {
+		in := &tree.Interfaces[k]
+
+		for i := range in.Properties {
+			p := in.Properties[i]
+
+			var mRead InterfaceMethod
+			mRead.Name = fmt.Sprintf("Get%s", ToPascal(p.Name))
+			mRead.ReturnType = p.Type
+			mRead.Params = []InterfaceMethodParam{}
+
+			var mWrite InterfaceMethod
+			mWrite.Name = fmt.Sprintf("Set%s", ToPascal(p.Name))
+			mWrite.Params = []InterfaceMethodParam{
+				{
+					Name: p.Name,
+					Type: p.Type,
+				},
+			}
+
+			if p.Access == "" {
+				p.Access = AccessPublic
+			}
+
+			switch p.Access {
+			case AccessPublic:
+				mRead.Access = AccessPublic
+				mWrite.Access = AccessPublic
+			case AccessPrivate:
+				mRead.Access = AccessPrivate
+				mWrite.Access = AccessPrivate
+			case AccessReadonly:
+				mRead.Access = AccessPublic
+				mWrite.Access = AccessPrivate
+			}
+
+			in.Methods = append(in.Methods, mRead, mWrite)
+		}
+
 		for i := range in.Methods {
-			if in.Methods[i].Access == "" {
-				in.Methods[i].Access = AccessPublic
+			m := &in.Methods[i]
+
+			if m.Access == "" {
+				m.Access = AccessPublic
 			}
 
-			if in.Methods[i].ReturnType != "" {
-				dt := NewDataType(in.Methods[i].ReturnType, bp.ComponentPackage)
-				in.Methods[i].ReturnDataType = &dt
+			if m.ReturnType != "" {
+				dt := NewDataType(m.ReturnType, bp.ComponentPackage)
+				m.ReturnDataType = &dt
 			}
 
-			for j := range in.Methods[i].Params {
-				in.Methods[i].Params[j].DataType = NewDataType(in.Methods[i].Params[j].Type, bp.ComponentPackage)
+			for j := range m.Params {
+				m.Params[j].DataType = NewDataType(m.Params[j].Type, bp.ComponentPackage)
 			}
 		}
 	}

@@ -19,11 +19,24 @@ func NewCompany(f dcom.Factory, obj dcom.Object) dcom.Stub {
 		obj:        obj.(component.Company),
 	}
 
+	stub.AddExecutor("GetEmployees", stub.ExecuteGetEmployees)
 	stub.AddExecutor("GetName", stub.ExecuteGetName)
 	stub.AddExecutor("GetMetadata", stub.ExecuteGetMetadata)
-	stub.AddExecutor("GetEmployees", stub.ExecuteGetEmployees)
 
 	return stub
+}
+
+func (stub_ *Company) ExecuteGetEmployees(in_ dcom.Unmarshaler, out_ dcom.Marshaler) {
+	keyword, err_ := in_.ReadString()
+	dcom.Assert(err_)
+
+	limit, err_ := in_.ReadIntOptional()
+	dcom.Assert(err_)
+
+	resp_, err_ := stub_.obj.GetEmployees(keyword, limit)
+
+	dcom.Assert(out_.WriteError(err_))
+	dcom.Assert(out_.WriteObjectArray(component.EmployeeToObjectArray(resp_)))
 }
 
 func (stub_ *Company) ExecuteGetName(in_ dcom.Unmarshaler, out_ dcom.Marshaler) {
@@ -38,17 +51,4 @@ func (stub_ *Company) ExecuteGetMetadata(in_ dcom.Unmarshaler, out_ dcom.Marshal
 
 	dcom.Assert(out_.WriteError(err_))
 	dcom.Assert(out_.WriteStructure(component.MetadataToStructure(resp_)))
-}
-
-func (stub_ *Company) ExecuteGetEmployees(in_ dcom.Unmarshaler, out_ dcom.Marshaler) {
-	keyword, err_ := in_.ReadString()
-	dcom.Assert(err_)
-
-	limit, err_ := in_.ReadIntOptional()
-	dcom.Assert(err_)
-
-	resp_, err_ := stub_.obj.GetEmployees(keyword, limit)
-
-	dcom.Assert(out_.WriteError(err_))
-	dcom.Assert(out_.WriteObjectArray(component.EmployeeToObjectArray(resp_)))
 }

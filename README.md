@@ -9,6 +9,7 @@ Distributed Component Object Model (DCOM) is a personal project that is heavily 
 - Remote Procedure Calls (RPC) using interfaces
 - Interface Definition Language (IDL) using XML
 - Public and private method access
+- Object properties (public/private/readonly)
 - Single-threaded and multi-threaded handling
 
 You can take a look at the [example](./example) on how the generated code and implementation look like. The corresponding IDL can also be seen [here](./idl/_example/).
@@ -35,6 +36,10 @@ The Interface Definition Language (IDL) uses XML format with this structure:
     </structure>
 
     <interface name="InterfaceName" clsid="9fddbe0e-d42e-4d01-b558-68fcc704c7d9">
+        <property name="interfaceProperty01" type="string">
+        <property name="interfaceProperty02" type="@AnotherInterface" access="readonly">
+        <property name="interfaceProperty03" type="#SomeStructure" access="private">
+
         <method name="someMethod" return="bool">
             <param name="arg01" type="float" />
             <param name="arg02" type="string[]" />
@@ -84,7 +89,7 @@ Any array type      | (8 + N * X) bytes
 
 ### Interface
 
-An interface acts as a middleware to an object instance. It provides methods that can be used to access or manipulate the underlying object. A method can be either **private** or **public** (default), specified with the `access` IDL attribute. A private method can only be called locally (i.e. within the same program) whereas a public method can be called both locally and remotely across different programs.
+An interface acts as a middleware to an object instance. It provides methods that can be used to access or manipulate the underlying object. A method can be either **private** or **public** (default), specified with the `access` IDL attribute. A private method can only be called locally (i.e. within the same program) whereas a public method can be called both locally and remotely across different programs. We also introduce a **property** that is a shorthand for common get/set methods with specified access rights: **public** (default), **private**, or **readonly**.
 
 Interfaces should also provide the object's class ID (i.e. CLSID) represented by Universally Unique Identifiers (UUIDs). The class ID is used by the DCOM engine to handle routing of the objects.
 

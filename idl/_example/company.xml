@@ -13,15 +13,8 @@
     </structure>
 
     <interface name="Company" clsid="e1192b79-c05b-4ec5-bae4-cb6acdd9f9a0">
-        <method name="GetName" return="string" />
-        <method name="SetName" access="private">
-            <param name="name" type="string" />
-        </method>
-
-        <method name="GetMetadata" return="#Metadata" />
-        <method name="SetMetadata" access="private">
-            <param name="metadata" type="#Metadata" />
-        </method>
+        <property name="name" type="string" access="readonly" />
+        <property name="metadata" type="#Metadata" access="readonly" />
 
         <method name="GetEmployees" return="@Employee[]">
             <param name="keyword" type="string" />

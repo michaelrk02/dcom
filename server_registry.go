@@ -32,12 +32,9 @@ func NewServerRegistry(repo Repository, l *log.Logger) *ServerRegistry {
 	}
 }
 
-func (r *ServerRegistry) AddHandler(clsid uuid.UUID, handler HandlerEntryPoint) {
-	r.handlerMap[clsid] = handler
-}
-
-func (r *ServerRegistry) AddStub(clsid uuid.UUID, stub StubEntryPoint) {
+func (r *ServerRegistry) AddStub(clsid uuid.UUID, stub StubEntryPoint, handler HandlerEntryPoint) {
 	r.stubMap[clsid] = stub
+	r.handlerMap[clsid] = handler
 }
 
 func (r *ServerRegistry) CreateInstance(clsid uuid.UUID, instanceID *uuid.UUID) (Object, error) {

@@ -101,7 +101,7 @@ func main() {
 					continue
 				}
 
-				married, err := employee.IsMarried()
+				married, err := employee.GetMarried()
 				if err != nil {
 					log.Println("error:", err)
 					employee.Release()

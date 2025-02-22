@@ -13,14 +13,14 @@ var CLSIDCompany = uuid.MustParse("e1192b79-c05b-4ec5-bae4-cb6acdd9f9a0")
 type Company interface {
 	dcom.Object
 
-	GetName() (string, error)
-	SetName(name string) error
-	GetMetadata() (Metadata, error)
-	SetMetadata(metadata Metadata) error
 	GetEmployees(keyword string, limit *int) ([]Employee, error)
 	AddEmployee(employee Employee) error
 	AddEmployees(employee []Employee) error
 	RemoveEmployee(employee Employee) error
+	GetName() (string, error)
+	SetName(name string) error
+	GetMetadata() (Metadata, error)
+	SetMetadata(metadata Metadata) error
 }
 
 func CompanyToObject(v Company) dcom.Object {

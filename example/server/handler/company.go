@@ -80,7 +80,12 @@ func (self *Company) AddEmployee(employee component.Employee) error {
 }
 
 func (self *Company) AddEmployees(employee []component.Employee) error {
-	self.Employees = append(self.Employees, employee...)
+	for _, emp := range employee {
+		err := self.AddEmployee(emp)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -89,6 +94,8 @@ func (self *Company) RemoveEmployee(employee component.Employee) error {
 	for _, emp := range self.Employees {
 		if emp.GetInstanceID() != employee.GetInstanceID() {
 			newEmployees = append(newEmployees, emp)
+		} else {
+			emp.Release()
 		}
 	}
 	self.Employees = newEmployees

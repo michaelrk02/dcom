@@ -20,12 +20,8 @@ func main() {
 	repo := dcom.NewInMemoryRepository()
 
 	reg := dcom.NewServerRegistry(repo, logger)
-
-	reg.AddHandler(component.CLSIDCompany, handler.NewCompany)
-	reg.AddHandler(component.CLSIDEmployee, handler.NewEmployee)
-
-	reg.AddStub(component.CLSIDCompany, stub.NewCompany)
-	reg.AddStub(component.CLSIDEmployee, stub.NewEmployee)
+	reg.AddStub(component.CLSIDCompany, stub.NewCompany, handler.NewCompany)
+	reg.AddStub(component.CLSIDEmployee, stub.NewEmployee, handler.NewEmployee)
 
 	company := initCompany(reg)
 	defer company.Release()

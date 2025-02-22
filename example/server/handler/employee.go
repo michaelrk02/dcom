@@ -69,7 +69,7 @@ func (self *Employee) SetTenure(tenure int) error {
 	return nil
 }
 
-func (self *Employee) IsMarried() (bool, error) {
+func (self *Employee) GetMarried() (bool, error) {
 	return self.Married, nil
 }
 

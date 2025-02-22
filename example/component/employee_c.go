@@ -19,7 +19,7 @@ type Employee interface {
 	SetSalary(salary float64) error
 	GetTenure() (int, error)
 	SetTenure(tenure int) error
-	IsMarried() (bool, error)
+	GetMarried() (bool, error)
 	SetMarried(married bool) error
 }
 

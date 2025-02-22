@@ -54,7 +54,32 @@ func (proxy_ *Employee) GetName() (string, error) {
 }
 
 func (proxy_ *Employee) SetName(name string) error {
-	panic("method not exposed")
+	var err_ error
+	var params_ bytes.Buffer
+
+	in_ := dcom.NewDefaultMarshaler(&params_)
+
+	err_ = in_.WriteString(name)
+	if err_ != nil {
+		return err_
+	}
+
+	resp_, err_ := proxy_.Conn.InvokeObject(proxy_.GetCLSID(), proxy_.GetInstanceID(), "SetName", &params_)
+	if err_ != nil {
+		return err_
+	}
+
+	out_ := dcom.NewDefaultUnmarshaler(resp_)
+
+	errRemote_, err_ := out_.ReadError()
+	if err_ != nil {
+		return err_
+	}
+	if errRemote_ != nil {
+		return errRemote_
+	}
+
+	return errRemote_
 }
 
 func (proxy_ *Employee) GetSalary() (float64, error) {
@@ -87,7 +112,32 @@ func (proxy_ *Employee) GetSalary() (float64, error) {
 }
 
 func (proxy_ *Employee) SetSalary(salary float64) error {
-	panic("method not exposed")
+	var err_ error
+	var params_ bytes.Buffer
+
+	in_ := dcom.NewDefaultMarshaler(&params_)
+
+	err_ = in_.WriteFloat(salary)
+	if err_ != nil {
+		return err_
+	}
+
+	resp_, err_ := proxy_.Conn.InvokeObject(proxy_.GetCLSID(), proxy_.GetInstanceID(), "SetSalary", &params_)
+	if err_ != nil {
+		return err_
+	}
+
+	out_ := dcom.NewDefaultUnmarshaler(resp_)
+
+	errRemote_, err_ := out_.ReadError()
+	if err_ != nil {
+		return err_
+	}
+	if errRemote_ != nil {
+		return errRemote_
+	}
+
+	return errRemote_
 }
 
 func (proxy_ *Employee) GetTenure() (int, error) {
@@ -120,14 +170,39 @@ func (proxy_ *Employee) GetTenure() (int, error) {
 }
 
 func (proxy_ *Employee) SetTenure(tenure int) error {
-	panic("method not exposed")
-}
-
-func (proxy_ *Employee) IsMarried() (bool, error) {
 	var err_ error
 	var params_ bytes.Buffer
 
-	resp_, err_ := proxy_.Conn.InvokeObject(proxy_.GetCLSID(), proxy_.GetInstanceID(), "IsMarried", &params_)
+	in_ := dcom.NewDefaultMarshaler(&params_)
+
+	err_ = in_.WriteInt(tenure)
+	if err_ != nil {
+		return err_
+	}
+
+	resp_, err_ := proxy_.Conn.InvokeObject(proxy_.GetCLSID(), proxy_.GetInstanceID(), "SetTenure", &params_)
+	if err_ != nil {
+		return err_
+	}
+
+	out_ := dcom.NewDefaultUnmarshaler(resp_)
+
+	errRemote_, err_ := out_.ReadError()
+	if err_ != nil {
+		return err_
+	}
+	if errRemote_ != nil {
+		return errRemote_
+	}
+
+	return errRemote_
+}
+
+func (proxy_ *Employee) GetMarried() (bool, error) {
+	var err_ error
+	var params_ bytes.Buffer
+
+	resp_, err_ := proxy_.Conn.InvokeObject(proxy_.GetCLSID(), proxy_.GetInstanceID(), "GetMarried", &params_)
 	if err_ != nil {
 		return false, err_
 	}
@@ -153,5 +228,30 @@ func (proxy_ *Employee) IsMarried() (bool, error) {
 }
 
 func (proxy_ *Employee) SetMarried(married bool) error {
-	panic("method not exposed")
+	var err_ error
+	var params_ bytes.Buffer
+
+	in_ := dcom.NewDefaultMarshaler(&params_)
+
+	err_ = in_.WriteBool(married)
+	if err_ != nil {
+		return err_
+	}
+
+	resp_, err_ := proxy_.Conn.InvokeObject(proxy_.GetCLSID(), proxy_.GetInstanceID(), "SetMarried", &params_)
+	if err_ != nil {
+		return err_
+	}
+
+	out_ := dcom.NewDefaultUnmarshaler(resp_)
+
+	errRemote_, err_ := out_.ReadError()
+	if err_ != nil {
+		return err_
+	}
+	if errRemote_ != nil {
+		return errRemote_
+	}
+
+	return errRemote_
 }
